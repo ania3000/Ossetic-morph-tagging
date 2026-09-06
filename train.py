@@ -18,8 +18,30 @@ from src.metrics import make_compute_metrics, make_compute_multitask_metrics
 def main(args):
     tokenizer = AutoTokenizer.from_pretrained(args.model_checkpoint, use_fast=True, add_prefix_space=True)
 
+    if args.mode == "lemmatization":
+        print("=== Запуск лемматизации ===")
+        from src.utils import read_lemmatization_conllu
+        from src.dataset import LemmatizationDataset
+        from src.metrics import make_compute_lemmatization_metrics
+
+        train_data = read_lemmatization_conllu(args.train_path)
+        dev_data = read_lemmatization_conllu(args.dev_path)
+        test_data = read_lemmatization_conllu(args.test_path)
+
+        train_ds = LemmatizationDataset(train_data, tokenizer)
+        dev_ds = LemmatizationDataset(dev_data, tokenizer, tags=train_ds.tags_)
+        test_ds = LemmatizationDataset(test_data, tokenizer, tags=train_ds.tags_)
+
+        model = AutoModelForTokenClassification.from_pretrained(
+            args.model_checkpoint, 
+            num_labels=len(train_ds.tags_)
+        )
+        data_collator = DataCollatorForTokenClassification(tokenizer=tokenizer)
+        compute_fn = make_compute_lemmatization_metrics(dev_ds)
+        metric_name = "Lemma_Accuracy"
+
     if args.mode == "multitask":
-        print("=== Запуск в режиме Multi-Task ===")
+        print("=== Запуск классификации в режиме Multi-Task ===")
         task_names = get_all_tasks(args.train_path)
         
         train_data = read_mt_conllu(args.train_path, task_names)
@@ -38,7 +60,7 @@ def main(args):
         metric_name = "Full_Tag_Accuracy"
 
     else:
-        print("=== Запуск в режиме Single-Task (Classic) ===")
+        print("=== Запуск классификации в режиме Single-Task (Classic) ===")
         train_data = read_conllu(args.train_path)
         dev_data = read_conllu(args.dev_path)
         test_data = read_conllu(args.test_path)
@@ -92,7 +114,7 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--mode", type=str, choices=["classic", "multitask"], default="multitask")
+    parser.add_argument("--mode", type=str, choices=["classic", "multitask", "lemmatization"], default="classic")
     parser.add_argument("--model_checkpoint", type=str, default="AlexeySorokin/ossbert-onc-unlab-from_multilingual-bs64-5epochs")
     parser.add_argument("--train_path", type=str, default="data/train.conllu")
     parser.add_argument("--dev_path", type=str, default="data/dev.conllu")
