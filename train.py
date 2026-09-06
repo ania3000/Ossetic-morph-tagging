@@ -40,7 +40,7 @@ def main(args):
         compute_fn = make_compute_lemmatization_metrics(dev_ds)
         metric_name = "Lemma_Accuracy"
 
-    if args.mode == "multitask":
+    elif args.mode == "multitask":
         print("=== Запуск классификации в режиме Multi-Task ===")
         task_names = get_all_tasks(args.train_path)
         
