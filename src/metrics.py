@@ -1,4 +1,47 @@
 import numpy as np
+from src.utils import restore_lemma
+
+def make_compute_lemmatization_metrics(gold_dataset):
+    def compute(eval_pred):
+        logits, labels = eval_pred
+        pred_ids = np.argmax(logits, axis=-1)
+
+        correct, total, seq_correct = 0, 0, 0
+
+        for sent_idx, (pred_sent, mask_sent) in enumerate(zip(pred_ids, labels)):
+            gold_labels_str = gold_dataset.raw_labels[sent_idx]
+            gold_words_str = gold_dataset.raw_words[sent_idx]
+
+            word_pos = 0
+            is_correct = True
+
+            for p, g in zip(pred_sent, mask_sent):
+                if g == -100:
+                    continue
+
+                pred_str = gold_dataset.tags_[p]
+                gold_str = gold_labels_str[word_pos]
+                current_word = gold_words_str[word_pos]
+
+                predicted_lemma = restore_lemma(current_word, pred_str)
+                gold_lemma = restore_lemma(current_word, gold_str)
+
+                if predicted_lemma == gold_lemma:
+                    correct += 1
+                else:
+                    is_correct = False
+
+                total += 1
+                word_pos += 1
+
+            seq_correct += int(is_correct)
+
+        return {
+            "Lemma_Accuracy": 100 * correct / total if total > 0 else 0,
+            "Sentence_Lemma_Accuracy": 100 * seq_correct / len(labels) if len(labels) > 0 else 0
+        }
+
+    return compute
 
 def make_compute_metrics(gold_dataset):
     """Замыкание для подсчета Accuracy и Sentence Accuracy."""
