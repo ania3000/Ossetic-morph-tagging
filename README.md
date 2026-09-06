@@ -52,13 +52,13 @@ Ossetic-morph-tagging/
 ├── .gitignore             
 ├── README.md               
 ├── requirements.txt        
-├── setup_environment.sh    # Скрипт сборки pyparadigm и клонирования данных
-├── train.py                # Единый скрипт для обучения (classic, multitask, lemmatization)
-└── src/                    # Модули исходного кода
-    ├── utils.py            # Чтение CoNLL-U, расчёт LCS и восстановление лемм по метке парадигмы
-    ├── dataset.py          # Классы Dataset и DataCollator
-    ├── models.py           # Архитектура Multi-Task модели
-    └── metrics.py          # Расчет метрик
+├── setup_environment.sh    
+├── train.py                
+└── src/                    
+    ├── utils.py            
+    ├── dataset.py          
+    ├── models.py      
+    └── metrics.py 
 ```
 
 ## Metrics
