@@ -9,7 +9,7 @@ Official repository for Ossetic morphological tagging (in classic and multi-task
 
 ## Overview
 
-This repository provides models and code for Morphological Analysis (Tagging and Lemmatization) for Iron Ossetic. 
+This repository provides models and code for morphological analysis (tagging and lemmatization) for Iron Ossetic. 
 
 | Resource | Description | Link |
 | :--- | :--- | :--- |
