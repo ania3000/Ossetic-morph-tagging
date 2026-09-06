@@ -44,7 +44,6 @@ def make_compute_lemmatization_metrics(gold_dataset):
     return compute
 
 def make_compute_metrics(gold_dataset):
-    """Замыкание для подсчета Accuracy и Sentence Accuracy."""
     def compute(eval_pred):
         logits, labels = eval_pred
         pred_ids = np.argmax(logits, axis=-1)
