@@ -16,19 +16,6 @@ SUPPL_DICT = {
     'ын'+'1+йæ#1+ын': 'йæ',
 }
 
-def make_last_subtoken_mask(word_ids, has_cls=True, has_eos=True):
-    mask = word_ids
-    if has_cls:
-        mask = mask[1:]
-    if has_eos:
-        mask = mask[:-1]
-    is_last_word = [first != second for first, second in zip(mask[:-1], mask[1:])] + [True]
-    if has_cls:
-        is_last_word = [False] + is_last_word
-    if has_eos:
-        is_last_word.append(False)
-    return is_last_word
-
 def get_ossetic_label(lemma, word_form):
     """Генерирует редакционную метку парадигмы на основе LCS."""
     if not HAS_PYPARADIGM:
