@@ -33,6 +33,11 @@ git clone https://github.com/ania3000/Ossetic-morph-tagging.git
 cd Ossetic-morph-tagging
 bash setup_environment.sh
 ```
+Get the dataset from Ossetic-COT repository:
+
+```bash
+git clone https://github.com/ania3000/Ossetic-COT.git
+```
 
 For tagging in multi-task mode or lemmatization change the 'mode' argument value in the code below to multitask or lemmatization.
    
@@ -40,9 +45,9 @@ For tagging in multi-task mode or lemmatization change the 'mode' argument value
 python3 train.py \
     --mode classic \
     --model_checkpoint AlexeySorokin/ossbert-onc-unlab-from_multilingual-bs64-5epochs \
-    --train_path data/train.conllu \
-    --dev_path data/dev.conllu \
-    --test_path data/test.conllu \
+    --train_path Ossetic-COT/train.conllu \
+    --dev_path Ossetic-COT/dev.conllu \
+    --test_path Ossetic-COT/test.conllu \
     --epochs 25
 ```
 ## Repository Structure
