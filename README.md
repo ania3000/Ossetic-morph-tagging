@@ -50,7 +50,10 @@ python3 train.py \
     --test_path Ossetic-COT/test.conllu \
     --epochs 25
 ```
-
+For inference on a single pass --text argument:
+```bash
+!python3 predict.py --text "Райсом нæм бацæуинæгтæ æрбацæудзысты."
+```
 ## Metrics
 Evaluation metrics obtained on Ossetic-COT (version 2) test set:
 
