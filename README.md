@@ -50,21 +50,6 @@ python3 train.py \
     --test_path Ossetic-COT/test.conllu \
     --epochs 25
 ```
-## Repository Structure
-
-```text
-Ossetic-morph-tagging/
-├── .gitignore             
-├── README.md               
-├── requirements.txt        
-├── setup_environment.sh    
-├── train.py                
-└── src/                    
-    ├── utils.py            
-    ├── dataset.py          
-    ├── models.py      
-    └── metrics.py 
-```
 
 ## Metrics
 Evaluation metrics obtained on Ossetic-COT (version 2) test set:
