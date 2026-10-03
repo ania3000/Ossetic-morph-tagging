@@ -217,3 +217,37 @@ def read_mt_conllu(infile, task_names):
                 "raw_labels": raw_labels[:]
             })
     return answer
+
+def parse_label(label):
+    return label.split(",", 1) if "," in label else (label, "_")
+
+def rule_tokenize(sentences):
+    punct = r'[!(),.:?‘’…`]'
+    processed = []
+    for sentence in sentences:
+        sentence = re.sub(f"({punct})", r" \1 ", sentence)
+        sentence = re.sub(r"\s+", " ", sentence)
+        sentence = sentence.strip()
+
+        sentence = re.sub(r"(У|у)(ӕд|æд)(дӕр|дæр)", r"\1\2 \3", sentence)
+        sentence = re.sub(r"(Æ|Ӕ|ӕ|æ)(ппын)(дӕр|дæр)", r"\1\2 \3", sentence)
+        sentence = re.sub(r"(Бынтон|бынтон)(дӕр|дæр)", r"\1 \2", sentence)
+        sentence = re.sub(r"(Æ|Ӕ|ӕ|æ)(рмӕст|рмæст)(дӕр|дæр)", r"\1\2 \3", sentence)
+        sentence = re.sub(r"(у|У)(ый)(б)(ӕ|æ)(рц)", r"\1\2 \3\4\5", sentence)
+
+        sentence = re.sub(r"(\w)(тӕккӕ|тæккæ)\b", r"\1 \2", sentence)
+        sentence = re.sub(r"(\w)(нымӕр|нымæр)", r"\1 \2", sentence)
+        sentence = re.sub(r"(\w)(мидӕг|мидæг)", r"\1 \2", sentence)
+        sentence = re.sub(r"(\w)(фæстæ|фæстæ)", r"\1 \2", sentence)
+
+        sentence = re.sub(r"\b(м|д|й|н|у|с|М|Д|Й|Н|У|С)(ӕ|æ)(хи|х(ӕ|æ)д(ӕ|æ)г\b)", r"\1\2 \3", sentence)
+        sentence = re.sub(r"(\w)(-|–|—)(иу|ма)", r"\1 \2 \3", sentence)
+
+        sentence = re.sub(r"(К|к)(уы)(н)(нӕ|нæ)", r"\1\2д \4", sentence)
+        sentence = re.sub(r"(Ц|ц)(ӕуы|æуы)(н)(нӕ|нæ)", r"\1\2л \4", sentence)
+
+        sentence = re.sub(r"(У|у)(ыд)(ӕ|æ)(тт)(едт)(ӕ|æ)", r"\1\2\3\4\3 й\5\6", sentence)
+        sentence = re.sub(r"(\w)(тт|т)(едт)(ӕ|æ)", r"\1\2\4 й\3\4", sentence)
+
+        processed.append(sentence)
+    return processed
