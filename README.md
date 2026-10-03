@@ -32,7 +32,14 @@ This repository provides models and code for morphological analysis (tagging and
 ```bash
 git clone https://github.com/ania3000/Ossetic-morph-tagging.git
 cd Ossetic-morph-tagging
+```
+If you are using Google Colab cmd:
+```bash
 bash setup_environment.sh
+```
+Else:
+```bash
+setup_environment.sh
 ```
 
 ### Training and evaluation
