@@ -6,9 +6,9 @@ import torch
 import torch.nn.functional as F
 from transformers import AutoModelForTokenClassification, AutoTokenizer
 
-from utils import rule_tokenize, restore_lemma, parse_label
-from dataset import InferUDDataset
-from segmenter import BiLSTMCharTagger, WordSegmenterDecoder
+from src.utils import rule_tokenize, restore_lemma, parse_label
+from src.dataset import InferUDDataset
+from src.segmenter import BiLSTMCharTagger, WordSegmenterDecoder
         
 class OsseticPipeline:
     def __init__(self, morph_model_name, lemm_model_name, segmenter_path=None, device=None):
