@@ -50,7 +50,7 @@ python3 train.py \
     --test_path Ossetic-COT/test.conllu \
     --epochs 25
 ```
-For inference on a single pass --text argument:
+For inference of a fine-tuned model on a single sentence pass 'text' argument:
 ```bash
 !python3 predict.py --text "Райсом нæм бацæуинæгтæ æрбацæудзысты."
 ```
