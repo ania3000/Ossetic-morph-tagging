@@ -28,11 +28,14 @@ This repository provides models and code for morphological analysis (tagging and
 
 
 ## Installation
+
 ```bash
 git clone https://github.com/ania3000/Ossetic-morph-tagging.git
 cd Ossetic-morph-tagging
 bash setup_environment.sh
 ```
+
+### Training and evaluation
 Get the dataset from Ossetic-COT repository:
 
 ```bash
@@ -50,6 +53,7 @@ python3 train.py \
     --test_path Ossetic-COT/test.conllu \
     --epochs 25
 ```
+### Inference
 For inference of a fine-tuned model on a single sentence pass 'text' argument:
 ```bash
 python3 predict.py --text "Райсом нæм бацæуинæгтæ æрбацæудзысты."
