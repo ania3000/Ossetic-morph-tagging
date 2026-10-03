@@ -54,6 +54,11 @@ For inference of a fine-tuned model on a single sentence pass 'text' argument:
 ```bash
 !python3 predict.py --text "Райсом нæм бацæуинæгтæ æрбацæудзысты."
 ```
+For inference on a txt-file pass 'input_file' argument:
+```bash
+python3 predict.py --input_file data_sample.txt --output_file parsed_output.conllu
+```
+
 ## Metrics
 Evaluation metrics obtained on Ossetic-COT (version 2) test set:
 
