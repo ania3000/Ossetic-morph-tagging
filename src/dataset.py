@@ -141,3 +141,34 @@ class LemmatizationDataset(Dataset):
             zero_labels[last_subtoken_mask] = labels
             answer["labels"] = zero_labels
         return answer
+
+class InferUDDataset(Dataset):
+    def __init__(self, data, tokenizer, min_count=1, tags=None): #было min_count = 3; я сделала 1 чтобы точно ничего не потерять
+        self.data = data
+        self.tokenizer = tokenizer
+        self.raw_labels = [item["labels"] for item in data if "labels" in item]
+        if tags is None:
+            tag_counts = Counter([tag for elem in data for tag in elem["labels"]])
+            self.tags_ = ["<PAD>", "<UNK>"] + [x for x, count in tag_counts.items() if count >= min_count]
+            #self.tags_ = ["<UNK>"] + [x for x, count in tag_counts.items() if count >= min_count]
+        else:
+            self.tags_ = tags
+        self.tag_indexes_ = {tag: i for i, tag in enumerate(self.tags_)}
+        self.unk_index = 1 #0
+        self.ignore_index = -100
+
+    def __len__(self):
+        return len(self.data)
+
+    def __getitem__(self, index):
+        item = self.data[index]
+        tokenization = self.tokenizer(item["words"], is_split_into_words=True)
+        last_subtoken_mask = make_last_subtoken_mask(tokenization.word_ids())
+        answer = {"input_ids": tokenization["input_ids"], "mask": last_subtoken_mask}
+        if "labels" in item:
+            #answer["raw_labels"] = item["labels"]
+            labels = [self.tag_indexes_.get(tag, self.unk_index) for tag in item["labels"]]
+            zero_labels = np.array([self.ignore_index] * len(tokenization["input_ids"]), dtype=int)
+            zero_labels[last_subtoken_mask] = labels
+            answer["labels"] = zero_labels
+        return answer
