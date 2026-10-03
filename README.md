@@ -47,7 +47,7 @@ Training data is located at data/ after execution of setup_environment.sh.
 For tagging in multi-task mode or lemmatization change the 'mode' argument value in the code below to multitask or lemmatization.
    
 ```bash
-python3 train.py \
+python train.py \
     --mode classic \
     --model_checkpoint AlexeySorokin/ossbert-onc-unlab-from_multilingual-bs64-5epochs \
     --train_path data/train.conllu \
