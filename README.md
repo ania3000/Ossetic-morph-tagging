@@ -54,7 +54,7 @@ python train.py \
     --train_path data/train.conllu \
     --dev_path data/dev.conllu \
     --test_path data/test.conllu \
-    --epochs 25
+    --epochs 25 \
     --push_to_hub \
     --hub_model_id user-name/model-name
 ```
