@@ -24,3 +24,6 @@ data/
 .idea/
 .vscode/
 .ipynb_checkpoints/
+
+*.pth
+models/*.pth
