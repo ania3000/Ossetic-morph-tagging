@@ -52,7 +52,7 @@ python3 train.py \
 ```
 For inference of a fine-tuned model on a single sentence pass 'text' argument:
 ```bash
-!python3 predict.py --text "Райсом нæм бацæуинæгтæ æрбацæудзысты."
+python3 predict.py --text "Райсом нæм бацæуинæгтæ æрбацæудзысты."
 ```
 For inference on a txt-file pass 'input_file' argument:
 ```bash
