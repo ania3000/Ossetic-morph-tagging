@@ -8,7 +8,7 @@ from torch.utils.data import Dataset
 from transformers import AutoModelForTokenClassification, AutoTokenizer
 
 from src.utils import rule_tokenize, restore_lemma, parse_label
-from src.dataset import UDDataset
+from src.dataset import InferUDDataset
 
 class BiLSTMCharTagger(torch.nn.Module):
     def __init__(self, vocab_size, embedding_dim, hidden_dim, output_dim):
@@ -181,10 +181,10 @@ class OsseticPipeline:
         if not words: return ""
 
         data_sample = {"words": words}
-        test_dataset = UDDataset([data_sample], self.tokenizer, tags=self.classes)
+        test_dataset = InferUDDataset([data_sample], self.tokenizer, tags=self.classes)
         tag_preds = self.predict_top_k(self.model, test_dataset, self.classes)[0]
 
-        test_dataset_l = UDDataset([data_sample], self.tokenizer_l, tags=self.classes_l)
+        test_dataset_l = InferUDDataset([data_sample], self.tokenizer_l, tags=self.classes_l)
         lemma_preds = self.predict_top_k(self.model_l, test_dataset_l, self.classes_l)[0]
 
         result = []
