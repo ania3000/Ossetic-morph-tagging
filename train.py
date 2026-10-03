@@ -17,7 +17,6 @@ from src.metrics import make_compute_metrics, make_compute_multitask_metrics
 
 def main(args):
     tokenizer = AutoTokenizer.from_pretrained(args.model_checkpoint, use_fast=True, add_prefix_space=True)
-
     if args.mode == "lemmatization":
         print("=== Запуск лемматизации ===")
         from src.utils import read_lemmatization_conllu
@@ -32,9 +31,14 @@ def main(args):
         dev_ds = LemmatizationDataset(dev_data, tokenizer, tags=train_ds.tags_)
         test_ds = LemmatizationDataset(test_data, tokenizer, tags=train_ds.tags_)
 
+        id2label = {i: tag for i, tag in enumerate(train_ds.tags_)}
+        label2id = {tag: i for i, tag in enumerate(train_ds.tags_)}
+
         model = AutoModelForTokenClassification.from_pretrained(
             args.model_checkpoint, 
-            num_labels=len(train_ds.tags_)
+            num_labels=len(train_ds.tags_),
+            id2label=id2label,
+            label2id=label2id
         )
         data_collator = DataCollatorForTokenClassification(tokenizer=tokenizer)
         compute_fn = make_compute_lemmatization_metrics(dev_ds)
@@ -69,9 +73,14 @@ def main(args):
         dev_ds = UDDataset(dev_data, tokenizer, tags=train_ds.tags_)
         test_ds = UDDataset(test_data, tokenizer, tags=train_ds.tags_)
 
+        id2label = {i: tag for i, tag in enumerate(train_ds.tags_)}
+        label2id = {tag: i for i, tag in enumerate(train_ds.tags_)}
+
         model = AutoModelForTokenClassification.from_pretrained(
             args.model_checkpoint, 
-            num_labels=len(train_ds.tags_)
+            num_labels=len(train_ds.tags_),
+            id2label=id2label,
+            label2id=label2id
         )
         data_collator = DataCollatorForTokenClassification(tokenizer=tokenizer)
         compute_fn = make_compute_metrics(dev_ds)
@@ -86,7 +95,9 @@ def main(args):
         num_train_epochs=args.epochs,
         learning_rate=args.lr,
         weight_decay=0.01,
-        report_to="none"
+        report_to="none",
+        push_to_hub=args.push_to_hub,
+        hub_model_id=args.hub_model_id
     )
 
     trainer = Trainer(
@@ -111,6 +122,11 @@ def main(args):
     results = trainer.predict(test_ds)
     print("Test Results:", results.metrics)
 
+    if args.push_to_hub:
+        print(f"Загрузка модели на Hugging Face: {args.hub_model_id}...")
+        tokenizer.push_to_hub(args.hub_model_id)
+        trainer.push_to_hub(commit_message="End of training")
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -123,5 +139,8 @@ if __name__ == "__main__":
     parser.add_argument("--epochs", type=int, default=25)
     parser.add_argument("--lr", type=float, default=5e-5)
     
+    parser.add_argument("--push_to_hub", action="store_true", help="Загрузить обученную модель на Hugging Face Hub")
+    parser.add_argument("--hub_model_id", type=str, default=None, help="Имя репозитория на HF, например 'username/ossbert-morph'")
+
     args = parser.parse_args()
     main(args)
