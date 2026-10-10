@@ -1,3 +1,15 @@
+import sys
+import os
+
+"""Автоматическое добавление C++ модулей pyparadigm в пути Python"""
+current_dir = os.path.dirname(os.path.abspath(__file__))
+sigmorphon_root = os.path.join(current_dir, "Sigmorphon2018SharedTask")
+
+if os.path.exists(sigmorphon_root):
+    sys.path.insert(0, sigmorphon_root)
+    sys.path.insert(0, os.path.join(sigmorphon_root, "pyparadigm"))
+    sys.path.insert(0, os.path.join(sigmorphon_root, "aligner"))
+
 import argparse
 from torch.optim import AdamW
 from transformers import (
